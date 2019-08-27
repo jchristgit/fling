@@ -1,6 +1,8 @@
 import argparse
 import ipaddress
 
+from . import __version__
+
 
 def parse_bind_address(addr: str) -> (str, int):
     host, port = addr.rsplit(':', maxsplit=1)
@@ -11,7 +13,13 @@ def parse_bind_address(addr: str) -> (str, int):
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        prog='fling'
+    )
+    parser.add_argument(
+        '-V', '--version',
+        action='version',
+        version='%%(prog)s %s' % __version__
     )
 
     server_group = parser.add_argument_group('server options')
