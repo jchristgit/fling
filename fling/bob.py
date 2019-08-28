@@ -30,7 +30,7 @@ class BuildResult:
 def run_build_commands(
     machine_path: pathlib.Path,
     clone_path: pathlib.Path,
-    config: configparser.ConfigParser
+    commands: str
 ):
     process = subprocess.run(
         [
@@ -42,7 +42,7 @@ def run_build_commands(
             cd /checkout
             set -x
 
-            {config.get('fling', 'commands')}
+            {commands}
             """
         ]
     )
@@ -92,28 +92,18 @@ def execute_build(
     trust: settings.Trust,
     gitea_token: str,
     payload: dict,
-    commit: str
-    ) -> (enums.BuildState, str):
+    commit: str,
+    commands: str,
+) -> (enums.BuildState, str):
     machine_checkout_path = machine_path / 'checkout'
     if not machine_checkout_path.exists():
         shutil.copytree(clone_path, machine_checkout_path)
 
     log.debug("Starting build.")
-    (status, config) = load_build_config(
-        repository_url=payload['repository']['html_url'],
-        repository_name=payload['repository']['full_name'],
-        commit=commit,
-        gitea_token=gitea_token,
-        trust=trust
-    )
-
-    if status is not enums.BuildState.SUCCESS:
-        return (status, config)
-
     (status, reason) = run_build_commands(
         machine_path=machine_path,
         clone_path=clone_path,
-        config=config,
+        commands=commands,
     )
 
     log.debug("Build complete.")

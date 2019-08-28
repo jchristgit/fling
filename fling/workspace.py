@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 
 def ensure_clean_name(name: str):
-    if any(c not in (string.ascii_letters + string.digits) for c in name):
+    if any(c not in (string.ascii_letters + string.digits + '_-') for c in name):
         raise ValueError("unclean name: %r" % (name,))
 
 

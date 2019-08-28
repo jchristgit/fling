@@ -52,6 +52,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 full_name=payload['repository']['full_name'],
                 commit=commit['id']
             )
+
             # load config
             set_status(enums.BuildState.PENDING, 'loading configuration')
             (result, config) = bob.load_build_config(
@@ -64,7 +65,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             if result is not enums.BuildState.SUCCESS:
                 # config is reason
                 set_status(result, config)
-                log.debug("Done with result %s: %s.", result, reason)
+                log.debug("Done with result %s: %s.", result, config)
                 return
 
             # prepare chroot
@@ -83,7 +84,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                 trust=self.trust,
                 gitea_token=self.gitea_token,
                 payload=payload,
-                commit=commit
+                commit=commit,
+                commands=config.get('fling', 'commands')
             )
 
             set_status(enums.BuildState.PENDING, 'cleaning up')
