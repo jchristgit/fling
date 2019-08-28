@@ -1,4 +1,5 @@
 import logging
+import socket
 import socketserver
 
 from .cli import make_parser
@@ -17,7 +18,6 @@ if __name__ == '__main__':
     log.setLevel(log_level)
 
     with socketserver.TCPServer(args.bind, RequestHandler) as server:
-        # doesn't work
-        # server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         log.info("Starting HTTP on %s:%d.", *args.bind)
         server.serve_forever()
