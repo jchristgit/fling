@@ -12,9 +12,9 @@ log = logging.getLogger(__name__)
 def run_build_commands(machine_path: pathlib.Path, clone_path: pathlib.Path):
     subprocess.run(
         [
-            'fakechroot',
+            'fakeroot', 'fakechroot',
             'chroot', machine_path,
-            'fakeroot', 'bash', '-c',
+            'bash', '-c',
             f"""
             set -eu
             cd /checkout

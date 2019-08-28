@@ -31,7 +31,6 @@ def prepare(
                 'fakeroot',
                 'debootstrap',
                 '--variant=minbase',
-                '--include=fakeroot',
                 suite,
                 template_machine_path
             ],
