@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import pathlib
 import shutil
@@ -18,25 +19,42 @@ def ensure_clean_name(name: str):
         raise ValueError("unclean name: %r" % (name,))
 
 
+def shasum_from_packages(packages: str) -> str:
+    return hashlib.sha512(packages.encode()).hexdigest()
+
+
+def template_up_to_date(machine_path: str, include_packages: str):
+    shasum_path = machine_path / '.fling-shasums'
+    return (
+        shasum_path.exists()
+        and shasum_path.read_text() == shasum_from_packages(include_packages)
+    )
+
+
 def prepare(
         commit: str, workspace: str,
-        packages: str, suite: str = 'stable',
+        include_packages: str, suite: str = 'stable',
 ) -> str:
     template_machine_path = workspace / 'machines' / 'template'
-    if not template_machine_path.exists():
+    if not template_up_to_date(template_machine_path, include_packages):
         log.debug("Creating template chroot at `%s`.", template_machine_path)
+        shutil.rmtree(template_machine_path, ignore_errors=True)
         subprocess.run(
             [
                 'fakechroot',
                 'fakeroot',
                 'debootstrap',
                 '--variant=minbase',
-                f'--include={packages}',
+                f'--include={include_packages}',
                 suite,
                 template_machine_path
             ],
             check=True
         )
+
+        with open(template_machine_path / '.fling-shasums', 'w+') as f:
+            f.write(shasum_from_packages(include_packages))
+
         log.debug("Template chroot ready.")
 
     build_machine_path = workspace / 'machines' / commit

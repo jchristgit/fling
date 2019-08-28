@@ -21,7 +21,7 @@ log = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
-class Build:
+class BuildResult:
     state: enums.BuildState
     context: str
     description: str
@@ -93,7 +93,7 @@ def execute_build(
     gitea_token: str,
     payload: dict,
     commit: str
-) -> Build:
+    ) -> (enums.BuildState, str):
     machine_checkout_path = machine_path / 'checkout'
     if not machine_checkout_path.exists():
         shutil.copytree(clone_path, machine_checkout_path)

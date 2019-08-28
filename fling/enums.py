@@ -2,6 +2,8 @@ import enum
 
 
 class BuildState(enum.Enum):
-    SUCCESS = 'success'
-    FAILED = 'failed'
     ERROR = 'error'
+    FAILED = 'failed'
+    PENDING = 'pending'
+    SUCCESS = 'success'
+    WARNING = 'warning'
