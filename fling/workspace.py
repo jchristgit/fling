@@ -46,11 +46,13 @@ def prepare(
     root: pathlib.Path = pathlib.Path(__file__).parent.parent,
 ):
     path = path_for(full_url=ssh_clone_url, full_name=full_name, root=root)
+    clone_path = path / 'repo'
     log.debug("Preparing workspace at `%s`.", path)
     path.mkdir(mode=0o700, parents=True, exist_ok=True)
     prepare_checkout(
-        clone_path=path / 'repo',
+        clone_path=clone_path,
         ssh_clone_url=ssh_clone_url,
         commit=commit
     )
     log.debug("Workspace ready.")
+    return clone_path
