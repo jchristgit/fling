@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler
 
+from . import machine
 from . import workspace
 
 
@@ -20,9 +21,15 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         payload = json.load(self.rfile)
         for commit in payload['commits']:
+            # prepare git checkout
             workspace.prepare(
                 ssh_clone_url=payload['repository']['ssh_url'],
                 full_name=payload['repository']['full_name'],
+                commit=commit['id']
+            )
+            # prepare chroot
+            machine.prepare(
+                name=payload['repository']['full_name'],
                 commit=commit['id']
             )
 

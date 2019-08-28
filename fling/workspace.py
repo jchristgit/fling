@@ -38,7 +38,7 @@ def prepare_checkout(clone_path: str, ssh_clone_url: str, commit: str):
             check=True, cwd=clone_path
         )
 
-    subprocess.run(['git', 'checkout', '--quiet', commit])
+    subprocess.run(['git', 'checkout', '--quiet', commit], cwd=clone_path)
 
 
 def prepare(
