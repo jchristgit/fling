@@ -1,7 +1,9 @@
 import argparse
+import configparser
 import ipaddress
 
 from . import __version__
+from . import settings
 
 
 def parse_bind_address(addr: str) -> (str, int):
@@ -20,6 +22,18 @@ def make_parser() -> argparse.ArgumentParser:
         '-V', '--version',
         action='version',
         version='%%(prog)s %s' % __version__
+    )
+    security_group = parser.add_argument_group('security options')
+    security_group.add_argument(
+        '--trust',
+        help=(
+            "which configuration file to use on builds: 'maintainers' to load "
+            "it from the default branch, 'everyone' to load it from the "
+            "commit the build is performed for"
+        ),
+        choices=tuple(settings.Trust),
+        type=settings.Trust,
+        default=settings.Trust.MAINTAINERS
     )
 
     server_group = parser.add_argument_group('server options')

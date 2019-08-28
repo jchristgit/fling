@@ -3,10 +3,13 @@ from http.server import BaseHTTPRequestHandler
 
 from . import bob
 from . import machine
+from . import settings
 from . import workspace
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    trust: settings.Trust
+
     def do_POST(self):
         clean_path = self.path.strip('/')
         handler = self.routing_table.get(clean_path)

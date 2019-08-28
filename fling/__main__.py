@@ -19,6 +19,8 @@ if __name__ == '__main__':
     log.setLevel(log_level)
     os.umask(0o077)
 
+    RequestHandler.trust = args.trust
+
     with socketserver.TCPServer(args.bind, RequestHandler) as server:
         server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         log.info("Starting HTTP on %s:%d.", *args.bind)
