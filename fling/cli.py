@@ -44,6 +44,10 @@ def make_parser() -> argparse.ArgumentParser:
         default='127.0.0.1:5555'
     )
     server_group.add_argument(
+        '-t', '--gitea-token',
+        help="gitea API token"
+    )
+    server_group.add_argument(
         '-l', '--log-level',
         help="level to log at",
         choices=('DEBUG', 'INFO', 'WARNING', 'ERROR'),

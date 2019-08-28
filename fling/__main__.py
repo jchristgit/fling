@@ -19,6 +19,10 @@ if __name__ == '__main__':
     log.setLevel(log_level)
     os.umask(0o077)
 
+    # would much prefer to pass this in as arguments
+    # but request handler needs to be a class due to
+    # how socketserver works
+    RequestHandler.gitea_token = args.gitea_token
     RequestHandler.trust = args.trust
 
     with socketserver.TCPServer(args.bind, RequestHandler) as server:

@@ -8,6 +8,7 @@ from . import workspace
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    gitea_token: str
     trust: settings.Trust
 
     def do_POST(self):
@@ -36,10 +37,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 commit=commit['id'],
                 workspace=clone_path.parent
             )
-            bob.execute_build(
+            (result, reason) = bob.execute_build(
                 clone_path=clone_path,
                 machine_path=machine_path,
-                payload=payload
+                trust=self.trust,
+                gitea_token=self.gitea_token,
+                payload=payload,
+                commit=commit
             )
             machine.cleanup(machine_path)
 
