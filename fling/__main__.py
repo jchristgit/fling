@@ -1,4 +1,5 @@
 import logging
+import os
 import socket
 import socketserver
 
@@ -16,6 +17,7 @@ if __name__ == '__main__':
     args = make_parser().parse_args()
     log_level = getattr(logging, args.log_level)
     log.setLevel(log_level)
+    os.umask(0o077)
 
     with socketserver.TCPServer(args.bind, RequestHandler) as server:
         server.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
