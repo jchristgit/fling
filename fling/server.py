@@ -1,10 +1,14 @@
 import json
+import logging
 from http.server import BaseHTTPRequestHandler
 
 from . import bob
 from . import machine
 from . import settings
 from . import workspace
+
+
+log = logging.getLogger(__name__)
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -46,6 +50,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 commit=commit
             )
             machine.cleanup(machine_path)
+            log.debug("Done with result %s: %s.", result, reason)
 
 
     routing_table = {

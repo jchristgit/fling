@@ -1,15 +1,17 @@
 # the builder
 
+import base64
 import configparser
 import dataclasses
+import json
 import logging
 import pathlib
 import shutil
 import subprocess
 import typing
 import urllib.error
-import urllib.request
 import urllib.parse
+import urllib.request
 
 from . import enums
 from . import settings
@@ -25,8 +27,12 @@ class Build:
     description: str
 
 
-def run_build_commands(machine_path: pathlib.Path, clone_path: pathlib.Path):
-    subprocess.run(
+def run_build_commands(
+    machine_path: pathlib.Path,
+    clone_path: pathlib.Path,
+    config: configparser.ConfigParser
+):
+    process = subprocess.run(
         [
             'fakeroot', 'fakechroot',
             'chroot', machine_path,
@@ -36,14 +42,13 @@ def run_build_commands(machine_path: pathlib.Path, clone_path: pathlib.Path):
             cd /checkout
             set -x
 
-            apt-get install -y python3
-            python3 -m unittest
-            whoami
-            echo $HOME
+            {config.get('fling', 'commands')}
             """
-        ],
-        check=True,
+        ]
     )
+    if process.returncode == 0:
+        return (enums.BuildState.SUCCESS, 'build completed successfully')
+    return (enums.BuildState.FAILED, f'build failed with rc {process.returncode}')
 
 
 def load_build_config(
@@ -61,7 +66,7 @@ def load_build_config(
 
     request = urllib.request.Request(
         endpoint,
-        headers={'Authorization': f'Token {gitea_token}'}
+        headers={'Authorization': f'token {gitea_token}'}
     )
 
     try:
@@ -69,7 +74,7 @@ def load_build_config(
         data = json.load(response)
         parser = configparser.ConfigParser()
         parser.read_string(
-            data['content'],
+            base64.b64decode(data['content'].encode()).decode(),
             source=f'.fling.ini@{repository_name}'
         )
         return (enums.BuildState.SUCCESS, parser)
