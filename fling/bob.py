@@ -16,11 +16,14 @@ def run_build_commands(machine_path: pathlib.Path, clone_path: pathlib.Path):
             'chroot', machine_path,
             'fakeroot', 'bash', '-c',
             f"""
-            set -eux
+            set -eu
+            cd /checkout
+            set -x
 
             apt-get install -y python3
-            cd /checkout
             python3 -m unittest
+            whoami
+            echo $HOME
             """
         ],
         check=True,
