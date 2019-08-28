@@ -38,6 +38,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 machine_path=machine_path,
                 payload=payload
             )
+            machine.cleanup(machine_path)
 
 
     routing_table = {

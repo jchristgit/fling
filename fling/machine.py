@@ -1,5 +1,6 @@
 import logging
 import pathlib
+import shutil
 import string
 import subprocess
 
@@ -52,3 +53,8 @@ def prepare(
         log.debug("Build chroot ready.")
 
     return build_machine_path
+
+
+def cleanup(machine_path: pathlib.Path):
+    shutil.rmtree(machine_path)
+    log.debug("Cleaned up machine at `%s`.", machine_path)

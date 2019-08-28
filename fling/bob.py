@@ -28,8 +28,8 @@ def run_build_commands(machine_path: pathlib.Path, clone_path: pathlib.Path):
 
 
 def execute_build(
-        clone_path: pathlib.Path, machine_path: pathlib.Path, payload: dict
-    ):
+    clone_path: pathlib.Path, machine_path: pathlib.Path, payload: dict
+):
     machine_checkout_path = machine_path / 'checkout'
     if not machine_checkout_path.exists():
         shutil.copytree(clone_path, machine_checkout_path)
