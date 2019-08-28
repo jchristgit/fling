@@ -20,7 +20,7 @@ def ensure_clean_name(name: str):
 
 def prepare(
         commit: str, workspace: str,
-        suite: str = 'stable',
+        packages: str, suite: str = 'stable',
 ) -> str:
     template_machine_path = workspace / 'machines' / 'template'
     if not template_machine_path.exists():
@@ -31,6 +31,7 @@ def prepare(
                 'fakeroot',
                 'debootstrap',
                 '--variant=minbase',
+                f'--include={packages}',
                 suite,
                 template_machine_path
             ],

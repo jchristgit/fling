@@ -36,10 +36,21 @@ class RequestHandler(BaseHTTPRequestHandler):
                 full_name=payload['repository']['full_name'],
                 commit=commit['id']
             )
+            # load config
+            (result, config) = bob.load_build_config(
+                repository_url=payload['repository']['html_url'],
+                repository_name=payload['repository']['full_name'],
+                commit=commit['id'],
+                gitea_token=self.gitea_token,
+                trust=self.trust
+            )
+            # check result!!
+
             # prepare chroot
             machine_path = machine.prepare(
                 commit=commit['id'],
-                workspace=clone_path.parent
+                workspace=clone_path.parent,
+                include_packages=config.get('fling', 'packages', fallback='')
             )
             (result, reason) = bob.execute_build(
                 clone_path=clone_path,
