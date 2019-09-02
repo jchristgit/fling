@@ -14,8 +14,7 @@ A simple, pure Python 3.7 continuous integration server for use with Gitea.
 
 - Python 3.7
 - `debootstrap`
-- `fakechroot`
-- `fakeroot`
+- `systemd-nspawn`
 - `git`
 
 ## Usage

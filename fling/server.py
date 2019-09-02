@@ -88,8 +88,8 @@ class RequestHandler(BaseHTTPRequestHandler):
                 commands=config.get('fling', 'commands')
             )
 
-            set_status(enums.BuildState.PENDING, 'cleaning up')
-            machine.cleanup(machine_path)
+            # set_status(enums.BuildState.PENDING, 'cleaning up')
+            # machine.cleanup(machine_path)
 
             set_status(result, reason)
             log.debug("Done with result %s: %s.", result, reason)

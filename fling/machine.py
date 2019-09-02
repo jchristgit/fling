@@ -41,13 +41,10 @@ def prepare(
         shutil.rmtree(template_machine_path, ignore_errors=True)
         subprocess.run(
             [
-                'fakechroot',
-                'fakeroot',
                 'debootstrap',
-                '--variant=minbase',
                 f'--include={include_packages}',
                 suite,
-                template_machine_path
+                str(template_machine_path)
             ],
             check=True
         )
@@ -56,6 +53,7 @@ def prepare(
             f.write(shasum_from_packages(include_packages))
 
         log.debug("Template chroot ready.")
+    return template_machine_path
 
     build_machine_path = workspace / 'machines' / commit
     if not build_machine_path.exists():

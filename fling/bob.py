@@ -34,9 +34,10 @@ def run_build_commands(
 ):
     process = subprocess.run(
         [
-            'fakeroot', 'fakechroot',
-            'chroot', machine_path,
-            'bash', '-c',
+            'systemd-nspawn',
+            '--ephemeral',
+            '--directory', machine_path,
+            '/bin/bash', '-c',
             f"""
             set -eu
             cd /checkout
@@ -97,7 +98,13 @@ def execute_build(
 ) -> (enums.BuildState, str):
     machine_checkout_path = machine_path / 'checkout'
     if not machine_checkout_path.exists():
-        shutil.copytree(clone_path, machine_checkout_path)
+        subprocess.run(
+            [
+                'cp', '--archive', '--reflink=auto',
+                clone_path, machine_checkout_path
+            ],
+            check=True
+        )
 
     log.debug("Starting build.")
     (status, reason) = run_build_commands(
