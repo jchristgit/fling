@@ -1,3 +1,4 @@
+import json
 import multiprocessing
 import pathlib
 import random
@@ -46,9 +47,13 @@ class ServerTests(unittest.TestCase):
 
         self.assertEqual(cm.exception.status, 404)
 
-    @unittest.skip("needs configured gitea")
     def test_returns_204_on_gitea_hook_route(self):
-        request = urllib.request.Request(self.url + '/hook/gitea', method='POST')
+        request = urllib.request.Request(
+            self.url + '/hook/gitea',
+            headers={'Content-Type': 'application/json'},
+            data=json.dumps({'commits': []}).encode(),
+            method='POST'
+        )
         response = urllib.request.urlopen(request)
         self.assertEqual(response.getcode(), 204)
         self.assertEqual(response.read(), b"")
