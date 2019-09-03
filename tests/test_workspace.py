@@ -12,8 +12,9 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_ensure_clean_name_raises_for_invalid_names(self):
         for name in ('%%%§§§§§§', 'hello/world', '../../../hello'):
-            with self.assertRaises(ValueError):
-                workspace.ensure_clean_name(name)
+            with self.subTest(name=name):
+                with self.assertRaises(ValueError):
+                    workspace.ensure_clean_name(name)
 
     def test_path_for_valid_names(self):
         self.assertEqual(
