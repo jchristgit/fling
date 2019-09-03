@@ -55,21 +55,6 @@ def prepare(
         log.debug("Template chroot ready.")
     return template_machine_path
 
-    build_machine_path = workspace / 'machines' / commit
-    if not build_machine_path.exists():
-        subprocess.run(
-            [
-                'cp', '--archive',
-                '--reflink=auto',
-                template_machine_path,
-                build_machine_path
-            ],
-            check=True
-        )
-        log.debug("Build chroot ready.")
-
-    return build_machine_path
-
 
 def cleanup(machine_path: pathlib.Path):
     shutil.rmtree(machine_path)
