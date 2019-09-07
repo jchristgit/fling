@@ -36,7 +36,7 @@ def run_build_commands(
         [
             'systemd-nspawn',
             '--ephemeral',
-            '--directory', machine_path,
+            '--directory', str(machine_path),
             '/bin/bash', '-c',
             f"""
             set -eu

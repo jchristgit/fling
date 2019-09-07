@@ -34,7 +34,7 @@ def template_up_to_date(machine_path: pathlib.Path, include_packages: str):
 def prepare(
         commit: str, workspace: pathlib.Path,
         include_packages: str, suite: str = 'stable',
-) -> str:
+) -> pathlib.Path:
     template_machine_path = workspace / 'machines' / 'template'
     if not template_up_to_date(template_machine_path, include_packages):
         log.debug("Creating template chroot at `%s`.", template_machine_path)
