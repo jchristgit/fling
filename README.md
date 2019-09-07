@@ -19,8 +19,7 @@ A simple, pure Python 3.7 continuous integration server for use with Gitea.
 
 ## Usage
 
-Configure the user running `fling` to have SSH keys to clone repositories you
-want to use it on.
+Configure root to have SSH keys to clone repositories you want to use it on.
 
 Then, see `python3 -m fling --help` for usage. Do not bind fling on a public IP
 address.
