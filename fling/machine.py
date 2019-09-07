@@ -23,7 +23,7 @@ def shasum_from_packages(packages: str) -> str:
     return hashlib.sha512(packages.encode()).hexdigest()
 
 
-def template_up_to_date(machine_path: str, include_packages: str):
+def template_up_to_date(machine_path: pathlib.Path, include_packages: str):
     shasum_path = machine_path / '.fling-shasums'
     return (
         shasum_path.exists()
@@ -32,7 +32,7 @@ def template_up_to_date(machine_path: str, include_packages: str):
 
 
 def prepare(
-        commit: str, workspace: str,
+        commit: str, workspace: pathlib.Path,
         include_packages: str, suite: str = 'stable',
 ) -> str:
     template_machine_path = workspace / 'machines' / 'template'
