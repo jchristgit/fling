@@ -1,3 +1,4 @@
+import doctest
 import pathlib
 import unittest
 
@@ -41,3 +42,7 @@ class WorkspaceTests(unittest.TestCase):
             )
         )
 
+
+def load_tests(loader, tests, ignore):
+    tests.addTests(doctest.DocTestSuite(workspace))
+    return tests

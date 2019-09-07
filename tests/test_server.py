@@ -43,7 +43,7 @@ class ServerTests(unittest.TestCase):
     def test_returns_404_on_post_unknown_routes(self):
         request = urllib.request.Request(self.url, method='POST')
         with self.assertRaises(urllib.error.HTTPError) as cm:
-            response = urllib.request.urlopen(request)
+            urllib.request.urlopen(request)
 
         self.assertEqual(cm.exception.status, 404)
 

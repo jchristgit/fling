@@ -20,6 +20,15 @@ class BobTestCase(unittest.TestCase):
             clone_path=clone_path,
             commands=commands
         )
+        bash_cmdline = (
+            f"""
+            set -eu
+            cd /checkout
+            set -x
+
+            {commands}
+            """
+        )
 
         self.assertIs(state, enums.BuildState.SUCCESS)
         self.assertEqual(reason, 'build completed successfully')
@@ -29,16 +38,9 @@ class BobTestCase(unittest.TestCase):
                 '--ephemeral',
                 '--directory', str(machine_path),
                 '/bin/bash', '-c',
-            f"""
-            set -eu
-            cd /checkout
-            set -x
-
-            {commands}
-            """
+                bash_cmdline
             ]
         )
-
 
     @unittest.mock.patch('subprocess.run')
     def test_run_build_commands_on_failure(self, subprocess_run):

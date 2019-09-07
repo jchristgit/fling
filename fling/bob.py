@@ -6,7 +6,6 @@ import dataclasses
 import json
 import logging
 import pathlib
-import shutil
 import subprocess
 import typing
 import urllib.error
@@ -82,7 +81,7 @@ def load_build_config(
 
     except urllib.error.HTTPError as err:
         return (
-            enums.BuildState.ERROR, 
+            enums.BuildState.ERROR,
             f'got unexpected status {err.getcode()} trying to load build config'
         )
 

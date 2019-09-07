@@ -91,7 +91,6 @@ class RequestHandler(BaseHTTPRequestHandler):
             set_status(result, reason)
             log.debug("Done with result %s: %s.", result, reason)
 
-
     routing_table = {
         'hook/gitea': handle_post_hook_gitea
     }

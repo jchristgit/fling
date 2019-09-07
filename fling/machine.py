@@ -5,8 +5,6 @@ import shutil
 import string
 import subprocess
 
-from . import workspace
-
 
 log = logging.getLogger(__name__)
 

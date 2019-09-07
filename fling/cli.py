@@ -1,5 +1,4 @@
 import argparse
-import configparser
 import ipaddress
 
 from . import __version__
