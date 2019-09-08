@@ -25,6 +25,9 @@ Configure root to have SSH keys to clone repositories you want to use it on.
 Then, see `python3 -m fling --help` for usage. Do not bind fling on a public IP
 address.
 
+Once the server is running, add a webhook on your repositories to test, pointing
+to the address of the fling server, path `/hook/gitea`.
+
 ## Execution
 
 When `fling` receives a build via its webhook route `/hook/gitea`, it performs
