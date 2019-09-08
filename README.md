@@ -16,6 +16,7 @@ A simple, pure Python 3.7 continuous integration server for use with Gitea.
 - `debootstrap`
 - `systemd-nspawn`
 - `git`
+- `root` access
 
 ## Usage
 
@@ -33,9 +34,7 @@ the following:
 - load build configuration (from the default branch or the commit to build, see `--trust`)
 - prepares Debian in a chroot if the current one is outdated [1], this is called
   the *template machine*
-- copies the template machine to the *build machine*, which is unique per
-  commit [2]
-- runs build commands in the build machine
+- runs build commands in an ephemeral snapshot of the template machine
 
 The commit status is updated on Gitea along the way.
 
@@ -44,9 +43,6 @@ The commit status is updated on Gitea along the way.
 at all, it is always considered outdated and recreated. Otherwise, fling
 compares a hashsum of the configuration the image was built with with the
 configuration that is desired, and if they mismatch, recreates the image
-
-[2] heavy speed improvements can be done here by using copy-on-write supporting
-filesystems such as btrfs
 
 
 <!-- vim: set tw=80: -->
