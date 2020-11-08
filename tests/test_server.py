@@ -1,10 +1,10 @@
 import json
-import multiprocessing
 import pathlib
 import random
 import socketserver
 import sys
 import tempfile
+import threading
 import unittest
 import urllib.error
 import urllib.request
@@ -23,7 +23,9 @@ def start_server_process(server):
         # the crumb is silent
         sys.stdout = outfile
         sys.stderr = outfile
-        server.serve_forever()
+        # Fast shutdown. If we use the default interval,
+        # this needs ~ 0.5 seconds to tear down.
+        server.serve_forever(poll_interval=0.01)
 
 
 class ServerTests(unittest.TestCase):
@@ -33,12 +35,12 @@ class ServerTests(unittest.TestCase):
         self.server = socketserver.TCPServer(
             self.bindaddr, server.RequestHandler
         )
-        self.process = multiprocessing.Process(
+        self.thread = threading.Thread(
             name='fling test suite: http server',
             target=start_server_process,
             args=(self.server,)
         )
-        self.process.start()
+        self.thread.start()
 
     def test_returns_404_on_post_unknown_routes(self):
         request = urllib.request.Request(self.url, method='POST')
@@ -59,5 +61,6 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(response.read(), b"")
 
     def tearDown(self):
-        self.process.terminate()
+        self.server.shutdown()
+        self.thread.join()
         self.server.server_close()
