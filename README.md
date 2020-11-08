@@ -15,21 +15,21 @@ A simple, pure Python 3 continuous integration server for use with Gitea.
   can be used to test [`bolt`](https://github.com/jchristgit/bolt):
 
 ```dosini
-+[fling]
-+commands =
-+  service postgresql start
-+  su postgres -s /bin/sh -c 'psql -c "CREATE USER bolt PASSWORD '"'"'bolt'"'"' SUPERUSER" -d postgres'
-+  su postgres -s /bin/sh -c 'psql -c "CREATE DATABASE bolt_test OWNER bolt" -d postgres'
-+
-+  export MIX_ENV=test
-+  export PGSQL_TEST_URL=postgres://bolt:bolt@/bolt_test
-+
-+  mix local.hex --force
-+  mix local.rebar --force
-+  mix deps.get
-+  mix deps.compile
-+  mix compile
-+packages = ca-certificates,elixir,erlang,git,postgresql-11
+[fling]
+commands =
+  service postgresql start
+  su postgres -s /bin/sh -c 'psql -c "CREATE USER bolt PASSWORD '"'"'bolt'"'"' SUPERUSER" -d postgres'
+  su postgres -s /bin/sh -c 'psql -c "CREATE DATABASE bolt_test OWNER bolt" -d postgres'
+
+  export MIX_ENV=test
+  export PGSQL_TEST_URL=postgres://bolt:bolt@/bolt_test
+
+  mix local.hex --force
+  mix local.rebar --force
+  mix deps.get
+  mix deps.compile
+  mix compile
+packages = ca-certificates,elixir,erlang,git,postgresql-11
 ```
 
 The packages specified in `packages` will be cached across invocations.
