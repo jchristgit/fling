@@ -34,10 +34,11 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(
             workspace.path_for(
                 full_url='https://git.example.com:443/subpath/owner/project',
-                full_name='myname/myproject'
+                full_name='myname/myproject',
+                root=pathlib.Path('/'),
             ),
             (
-                pathlib.Path(__file__).parent.parent / 'workspace'
+                pathlib.Path('/') / 'workspace'
                 / 'git.example.com' / 'myname' / 'myproject'
             )
         )

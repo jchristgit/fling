@@ -6,6 +6,7 @@ import dataclasses
 import json
 import logging
 import pathlib
+import shutil
 import subprocess
 import typing
 import urllib.error
@@ -35,6 +36,7 @@ def run_build_commands(
         [
             'systemd-nspawn',
             '--ephemeral',
+            '--quiet',
             '--directory', str(machine_path),
             '/bin/bash', '-c',
             f"""
@@ -57,9 +59,12 @@ def load_build_config(
     commit: str,
     gitea_token: str,
     trust: settings.Trust
-) -> (enums.BuildState, typing.Union[str, configparser.ConfigParser]):
+) -> typing.Tuple[enums.BuildState, typing.Union[str, configparser.ConfigParser]]:
     parsed = urllib.parse.urlparse(repository_url)
-    endpoint = f'{parsed.scheme}://{parsed.netloc}/api/v1/repos/{repository_name}/contents/.fling.ini'
+    endpoint = (
+        f'{parsed.scheme}://{parsed.netloc}'
+        f'/api/v1/repos/{repository_name}/contents/.fling.ini'
+    )
 
     if trust == settings.Trust.EVERYONE:
         endpoint += f'?ref={commit}'
@@ -94,13 +99,21 @@ def execute_build(
     payload: dict,
     commit: str,
     commands: str,
-) -> (enums.BuildState, str):
+) -> typing.Tuple[enums.BuildState, str]:
     machine_checkout_path = machine_path / 'checkout'
-    if not machine_checkout_path.exists():
+    if not machine_checkout_path.exists() or commit == '<unknown>':
+
+        if commit == '<unknown>' and machine_checkout_path.exists():
+            shutil.rmtree(machine_checkout_path)
+
+        log.debug("Copying source tree into machine checkout path.")
         subprocess.run(
             [
-                'cp', '--archive', '--reflink=auto',
-                clone_path, machine_checkout_path
+                'cp',
+                '--archive',
+                '--reflink=auto',
+                clone_path,
+                machine_checkout_path
             ],
             check=True
         )

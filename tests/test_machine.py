@@ -94,6 +94,7 @@ class MachinePrepareSteps(unittest.TestCase):
             self.file.unlink()
         shutil.rmtree(self.dir)
 
+
 class MachineUpToDateTests(unittest.TestCase):
     def setUp(self):
         self.dir = pathlib.Path(tempfile.mkdtemp(prefix='fling-tests'))

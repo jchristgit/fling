@@ -36,6 +36,7 @@ class BobTestCase(unittest.TestCase):
             [
                 'systemd-nspawn',
                 '--ephemeral',
+                '--quiet',
                 '--directory', str(machine_path),
                 '/bin/bash', '-c',
                 bash_cmdline
@@ -78,6 +79,7 @@ class BobTestCase(unittest.TestCase):
                     [
                         'systemd-nspawn',
                         '--ephemeral',
+                        '--quiet',
                         '--directory', str(machine_path),
                         '/bin/bash', '-c',
                         bash_cmdline

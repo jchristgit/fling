@@ -1,19 +1,9 @@
 # fling
 
-A simple, pure Python 3 continuous integration server for use with Gitea.
+A wrapper around `systemd-nspawn` and `debootstrap` for running isolated tests.
+Can be run for local builds, and also ships a web server for usage with `gitea`.
 
-
-## Usage
-
-- Create a token in Gitea's "Application" settings
-  (`user/settings/applications`)
-- Start `fling` with the generated `--gitea-token`, ensure it is reachable to
-  Gitea
-- Configure a webhook in your repository to point to
-  `http://<FLING_ADDR>/hook/gitea`
-- Configure fling in your repository. For example, the following configuration
-  can be used to test [`bolt`](https://github.com/jchristgit/bolt):
-
+A sample configuration file for testing [`bolt`](https://github.com/jchristgit/bolt)
 ```dosini
 [fling]
 commands =
@@ -34,6 +24,29 @@ packages = ca-certificates,elixir,erlang,git,postgresql-11
 
 The packages specified in `packages` will be cached across invocations.
 `commands` are simply run via shell.
+
+## Local usage
+
+Head to your project directory and execute `python3 -m fling build` as root.
+
+## Usage with Gitea
+
+- Create a token in Gitea's "Application" settings
+  (`user/settings/applications`)
+- Start `fling` with the generated `--gitea-token`, ensure it is reachable to
+  Gitea
+- Configure a webhook in your repository to point to
+  `http://<FLING_ADDR>/hook/gitea`
+- Configure fling in your repository. See the configuration example above.
+
+
+Configure root to have SSH keys to clone repositories you want to use it on.
+
+Then, see `python3 -m fling server --help` for usage. Do not bind fling on a public IP
+address.
+
+Once the server is running, add a webhook on your repositories to test, pointing
+to the address of the fling server, path `/hook/gitea`.
 
 
 ## Execution
@@ -66,13 +79,6 @@ configuration that is desired, and if they mismatch, recreates the image
 
 ## Setup
 
-Configure root to have SSH keys to clone repositories you want to use it on.
-
-Then, see `python3 -m fling --help` for usage. Do not bind fling on a public IP
-address.
-
-Once the server is running, add a webhook on your repositories to test, pointing
-to the address of the fling server, path `/hook/gitea`.
 
 
 <!-- vim: set tw=80: -->

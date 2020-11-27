@@ -26,7 +26,7 @@ def path_for(
     return root / 'workspace' / hostname / owner / project
 
 
-def prepare_checkout(clone_path: str, ssh_clone_url: str, commit: str):
+def prepare_checkout(clone_path: pathlib.Path, ssh_clone_url: str, commit: str):
     if not clone_path.exists():
         subprocess.run(
             ['git', 'clone', '--quiet', ssh_clone_url, clone_path],
